@@ -9,11 +9,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
 import finbarre.weather.service.AccuweatherService;
+import finbarre.weather.service.OneDayFullForecastService;
 import finbarre.weather.service.OpenweathermapService;
 import finbarre.weather.service.WeatherbitService;
 
 @Service
-public class OneDayFullForecastService implements finbarre.weather.service.OneDayFullForecastService {
+public class OneDayFullForecastServiceImpl implements OneDayFullForecastService {
 
 	@Autowired
 	private AccuweatherService accuweatherService;

@@ -41,11 +41,11 @@ public class AccuweatherServiceImpl implements AccuweatherService {
 		
 		JsonNode root = getForecast(coordinates.getCityCode());
 
-		OneDayForecast oneDayForecast = new OneDayForecast.Builder().description(root.at("/Headline/Text").asText())
-				.minTemperature(convertToCelcius(root.at("/DailyForecasts/Temperature/Minimum/Value").asDouble()))
-				.maxTemperature(convertToCelcius(root.at("/DailyForecasts/Temperature/Maximum/Value").asDouble()))
+		OneDayForecast oneDayForecast = new OneDayForecast.Builder()
+				.description(root.at("/Headline/Text").asText())
+				.minTemperature(convertToCelcius(root.get("DailyForecasts").get(0).get("Temperature").get("Minimum").get("Value").asDouble()))
+				.maxTemperature(convertToCelcius(root.get("DailyForecasts").get(0).get("Temperature").get("Maximum").get("Value").asDouble()))
 				.weatherService("accuweather.com").temperatureUnit("C").build();
-
 		return Optional.ofNullable(oneDayForecast);
 	}
 
@@ -63,9 +63,8 @@ public class AccuweatherServiceImpl implements AccuweatherService {
 		return Optional.ofNullable(root.toString());
 	}
 
-	private JsonNode getForecast(long l) throws JsonProcessingException, JsonMappingException {
-		String url = "http://dataservice.accuweather.com/forecasts/v1/daily/1day/" + l + "?apikey=" + accuweatherAPIKey;
-
+	private JsonNode getForecast(long location) throws JsonProcessingException, JsonMappingException {
+		String url = "http://dataservice.accuweather.com/forecasts/v1/daily/1day/" + location + "?apikey=" + accuweatherAPIKey;
 		ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
 
 		ObjectMapper mapper = new ObjectMapper();
